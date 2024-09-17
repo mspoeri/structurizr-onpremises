@@ -2,7 +2,7 @@
 # - it will likely be migrated in the Gradle build file at some point in the future
 # - this has only been tested on MacOS
 
-export STRUCTURIZR_UI_DIR=../structurizr-ui
+export STRUCTURIZR_UI_DIR=structurizr-ui
 export STRUCTURIZR_ONPREMISES_DIR=./structurizr-onpremises
 
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
