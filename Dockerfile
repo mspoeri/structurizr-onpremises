@@ -1,3 +1,14 @@
+FROM gradle:7-jdk17 AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN ./ui.sh
+
+RUN ./gradlew -c settings.gradle -x integrationTest clean build
+
+
 FROM tomcat:10.1.16-jre17-temurin-jammy
 ENV PORT 8080
 
@@ -8,8 +19,10 @@ RUN set -eux; \
 RUN sed -i 's/port="8080"/port="${http.port}" maxPostSize="10485760"/' conf/server.xml \
   && echo 'export CATALINA_OPTS="-Xms512M -Xmx512M -Dhttp.port=$PORT"' > bin/setenv.sh
 
-ADD build/libs/structurizr-onpremises.war /usr/local/tomcat/webapps/ROOT.war
+# Copy the war file from the build stage to the tomcat webapps directory
+COPY --from=build /app/structurizr-onpremises/build/libs/structurizr-onpremises.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE ${PORT}
 
 CMD ["catalina.sh", "run"]
+
