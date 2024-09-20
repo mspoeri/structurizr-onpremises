@@ -1,4 +1,4 @@
-FROM gradle:7-jdk17 AS build
+FROM gradle:7-jdk19 AS build
 
 WORKDIR /app
 
@@ -9,8 +9,8 @@ RUN ./ui.sh
 RUN ./gradlew -c settings.gradle -x integrationTest clean build
 
 
-FROM tomcat:10.1.16-jre17-temurin-jammy
-ENV PORT 8080
+FROM tomcat:10.1-jre21-temurin-noble
+ENV PORT=8080
 
 RUN set -eux; \
 	apt-get update; \
@@ -25,4 +25,3 @@ COPY --from=build /app/structurizr-onpremises/build/libs/structurizr-onpremises.
 EXPOSE ${PORT}
 
 CMD ["catalina.sh", "run"]
-
